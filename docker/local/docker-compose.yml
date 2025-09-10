@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    command: postgres -c log_statement=all
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ../../
+      dockerfile: ./docker/local/Dockerfile
+    env_file:
+      - ../../.env
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ../../:/app
+      - venv_data:/app/.venv
+    ports:
+      - "${EXTERNAL_PORT}:${INTERNAL_PORT}"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:${INTERNAL_PORT}/health-check || exit 1" ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  venv_data:
+  pg_data:
