@@ -10,7 +10,6 @@ api_key_header: APIKeyHeader = APIKeyHeader(name=API_KEY_NAME, auto_error=True)
 
 
 def verify_api_key(api_key: str = Security(api_key_header)) -> str:
-    """Verifies the provided API key against the one in settings."""
     if api_key != settings.api.static_api_key:
         raise HTTPException(status_code=HTTPStatus.FORBIDDEN, detail="Could not validate credentials")
     return api_key

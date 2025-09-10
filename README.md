@@ -1,9 +1,9 @@
 # REST API for a Directory Application
 
 [![Python](https://img.shields.io/badge/Python-3.12-3777A7?style=flat-square)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100.0-05998b?style=flat-square)](https://fastapi.tiangolo.com/)
-[![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-d71f00?style=flat-square)](https://www.sqlalchemy.org/)
-[![Pytest](https://img.shields.io/badge/Pytest-8.2.2-0A9EDC?style=flat-square)](https://pytest.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.116.1-05998b?style=flat-square)](https://fastapi.tiangolo.com/)
+[![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0.43-d71f00?style=flat-square)](https://www.sqlalchemy.org/)
+[![Pytest](https://img.shields.io/badge/Pytest--Asyncio-1.1.0-0A9EDC?style=flat-square)](https://pytest.org/)
 [![Ruff](https://img.shields.io/badge/Style-Ruff-black?style=flat-square)](https://docs.astral.sh/ruff/)
 
 <ul>

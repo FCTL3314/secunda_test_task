@@ -17,31 +17,25 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     op.execute(
-        """
-        CREATE
-        OR REPLACE FUNCTION get_activity_depth(p_activity_id integer)
+        """CREATEOR REPLACE FUNCTION get_activity_depth(p_activity_id integer)
         RETURNS integer AS
-        $BODY$
-        DECLARE
-        v_depth integer;
-        BEGIN
-        WITH RECURSIVE activity_tree AS (SELECT id, parent_id, 1 as depth
-                                         FROM activities
-                                         WHERE id = p_activity_id
-                                         UNION ALL
-                                         SELECT a.id, a.parent_id, at.depth + 1
-                                         FROM activities a
-                                                  JOIN activity_tree at
-        ON a.id = at.parent_id
-            )
-        SELECT max(depth)
-        INTO v_depth
-        FROM activity_tree;
-        RETURN v_depth;
-        END;
-        $BODY$
-        LANGUAGE plpgsql;
-        """
+BODY$
+ CLARE
+  epth integer;
+   N
+    RECURSIVE activity_tree AS (SELECT id, parent_id, 1 as depth
+                                      ctivities
+                                       d = p_activity_id
+                                        L
+                                         id, a.parent_id, at.depth + 1
+                                          ities a
+                                                    ty_tree at
+        ON .parent_id
+                ECth)
+        INTO v      FROM acee;
+        RETURN v       END;
+    $
+   UAGE pl      """
     )
     op.execute(
         """

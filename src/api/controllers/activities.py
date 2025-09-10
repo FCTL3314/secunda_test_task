@@ -2,8 +2,8 @@ from typing import Sequence
 
 from fastapi import APIRouter, Depends
 
-from src.api.schemas import Organization
 from src.api.controllers.dependencies import get_directory_service
+from src.api.schemas import Organization
 from src.services.directory import DirectoryService
 
 router: APIRouter = APIRouter(
@@ -18,7 +18,7 @@ router: APIRouter = APIRouter(
     summary="Get organizations by activity (including sub-activities)",
 )
 async def read_organizations_by_activity(
-    activity_id: int, service: DirectoryService = Depends(get_directory_service)
+        activity_id: int, service: DirectoryService = Depends(get_directory_service)
 ) -> Sequence[Organization]:
     return await service.get_organizations_by_activity(activity_id)
 
@@ -29,6 +29,6 @@ async def read_organizations_by_activity(
     summary="Search organizations by activity name (including sub-activities)",
 )
 async def search_organizations_by_activity_name(
-    name: str, service: DirectoryService = Depends(get_directory_service)
+        name: str, service: DirectoryService = Depends(get_directory_service)
 ) -> Sequence[Organization]:
     return await service.search_organizations_by_activity_name(name)

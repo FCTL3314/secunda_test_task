@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -99,7 +99,7 @@ class DirectoryRepository:
         return result.scalars().unique().all()
 
     async def get_organizations_in_bbox(
-        self, min_lat: float, min_lon: float, max_lat: float, max_lon: float
+            self, min_lat: float, min_lon: float, max_lat: float, max_lon: float
     ) -> Sequence[models.Organization]:
         building_ids_subquery = (
             select(models.Building.id)
