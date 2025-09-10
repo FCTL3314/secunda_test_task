@@ -7,7 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse
 
-from src.api.schemas import HealthCheckResponse
+from src.api.schemas.system import HealthCheckResponse
 from src.db.database import get_async_db
 
 logger = logging.getLogger(__name__)
