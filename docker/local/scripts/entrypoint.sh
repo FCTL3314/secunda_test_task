@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-uv sync --locked
+uv sync --locked --all-extras
 
 uv run make apply_migrations
 
