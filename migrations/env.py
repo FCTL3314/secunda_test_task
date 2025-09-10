@@ -1,13 +1,12 @@
 import asyncio
 from logging.config import fileConfig
+
+from alembic import context
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from alembic import context
 from src.core import settings
-from src.db.models.common import *  # noqa
-
-from src.db.models import Base
+from src.db.models import *
 
 config = context.config
 
@@ -26,15 +25,7 @@ config.set_section_option(config.config_ini_section, "DB_PORT", str(settings.db.
 
 
 def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode.
-
-    This configures the context with just a URL
-    and not an Engine, though an Engine is acceptable
-    here as well.  By skipping the Engine creation
-    we don't even need a DBAPI to be available.
-
-    Calls to context.execute() here emit the script output to stdout.
-    """
+    """Run migrations in 'offline' mode."""
     url = settings.session.url
     context.configure(
         url=url,
