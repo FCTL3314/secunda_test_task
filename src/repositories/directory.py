@@ -32,14 +32,30 @@ class DirectoryRepository:
         return result.scalars().all()
 
     async def search_organizations_by_name(self, name: str) -> Sequence[models.Organization]:
-        query = select(models.Organization).where(models.Organization.name.ilike(f"%{name}%"))
+        query = (
+            select(models.Organization)
+            .where(models.Organization.name.ilike(f"%{name}%"))
+            .options(
+                joinedload(models.Organization.phone_numbers),
+                joinedload(models.Organization.activities),
+                joinedload(models.Organization.building),
+            )
+        )
         result = await self.db.execute(query)
-        return result.scalars().all()
+        return result.scalars().unique().all()
 
     async def get_organizations_by_building_id(self, building_id: int) -> Sequence[models.Organization]:
-        query = select(models.Organization).where(models.Organization.building_id == building_id)
+        query = (
+            select(models.Organization)
+            .where(models.Organization.building_id == building_id)
+            .options(
+                joinedload(models.Organization.phone_numbers),
+                joinedload(models.Organization.activities),
+                joinedload(models.Organization.building),
+            )
+        )
         result = await self.db.execute(query)
-        return result.scalars().all()
+        return result.scalars().unique().all()
 
     async def get_all_child_activity_ids(self, activity_id: int) -> set[int]:
         query = select(models.Activity.id).where(models.Activity.parent_id == activity_id)
@@ -57,18 +73,34 @@ class DirectoryRepository:
             select(models.Organization)
             .join(models.organization_activity_association)
             .where(models.organization_activity_association.c.activity_id.in_(activity_ids))
+            .options(
+                joinedload(models.Organization.phone_numbers),
+                joinedload(models.Organization.activities),
+                joinedload(models.Organization.building),
+            )
+            .distinct()
         )
         result = await self.db.execute(query)
-        return result.scalars().all()
+        return result.scalars().unique().all()
 
     async def get_organizations_by_building_ids(self, building_ids: list[int]) -> Sequence[models.Organization]:
         if not building_ids:
             return []
-        query = select(models.Organization).where(models.Organization.building_id.in_(building_ids))
+        query = (
+            select(models.Organization)
+            .where(models.Organization.building_id.in_(building_ids))
+            .options(
+                joinedload(models.Organization.phone_numbers),
+                joinedload(models.Organization.activities),
+                joinedload(models.Organization.building),
+            )
+        )
         result = await self.db.execute(query)
-        return result.scalars().all()
+        return result.scalars().unique().all()
 
-    async def get_organizations_in_bbox(self, min_lat: float, min_lon: float, max_lat: float, max_lon: float) -> Sequence[models.Organization]:
+    async def get_organizations_in_bbox(
+        self, min_lat: float, min_lon: float, max_lat: float, max_lon: float
+    ) -> Sequence[models.Organization]:
         building_ids_subquery = (
             select(models.Building.id)
             .where(
@@ -76,11 +108,19 @@ class DirectoryRepository:
                 models.Building.longitude.between(min_lon, max_lon),
             )
         )
-        query = select(models.Organization).where(models.Organization.building_id.in_(building_ids_subquery))
+        query = (
+            select(models.Organization)
+            .where(models.Organization.building_id.in_(building_ids_subquery))
+            .options(
+                joinedload(models.Organization.phone_numbers),
+                joinedload(models.Organization.activities),
+                joinedload(models.Organization.building),
+            )
+        )
         result = await self.db.execute(query)
-        return result.scalars().all()
+        return result.scalars().unique().all()
 
     async def find_activity_by_name(self, name: str) -> models.Activity | None:
-        query = select(models.Activity).where(func.lower(models.Activity.name) == name.lower())
+        query = select(models.Activity).where(models.Activity.name.ilike(f"%{name}%"))
         result = await self.db.execute(query)
         return result.scalars().first()
