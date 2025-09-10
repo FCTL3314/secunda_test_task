@@ -1,14 +1,7 @@
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Float,
-    ForeignKey,
-    Table,
-    CheckConstraint,
-)
+from sqlalchemy import Table, Column, Integer, ForeignKey, String, Float
 from sqlalchemy.orm import relationship
-from .database import Base
+
+from src.db.models import Base
 
 organization_activity_association = Table(
     "organization_activity",
