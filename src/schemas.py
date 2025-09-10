@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import List, Optional
 
 
 class PhoneNumberBase(BaseModel):
@@ -11,7 +10,7 @@ class PhoneNumber(PhoneNumberBase):
     organization_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ActivityBase(BaseModel):
@@ -20,10 +19,10 @@ class ActivityBase(BaseModel):
 
 class Activity(ActivityBase):
     id: int
-    parent_id: Optional[int] = None
+    parent_id: int | None = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BuildingBase(BaseModel):
@@ -36,7 +35,7 @@ class Building(BuildingBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class OrganizationBase(BaseModel):
@@ -46,8 +45,8 @@ class OrganizationBase(BaseModel):
 class Organization(OrganizationBase):
     id: int
     building: Building
-    phone_numbers: List[PhoneNumber] = []
-    activities: List[Activity] = []
+    phone_numbers: list[PhoneNumber] = []
+    activities: list[Activity] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
