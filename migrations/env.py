@@ -5,8 +5,15 @@ from alembic import context
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from src.core import settings
-from src.db.models import *
+from src.core.config import settings
+from src.db.models import (  # noqa
+    Activity,
+    Building,
+    Organization,
+    PhoneNumber,
+    organization_activity_association
+)
+from src.db.models.base import Base
 
 config = context.config
 
@@ -26,7 +33,7 @@ config.set_section_option(config.config_ini_section, "DB_PORT", str(settings.db.
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
-    url = settings.session.url
+    url = settings.db.url
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -49,6 +56,7 @@ async def run_migrations_online() -> None:
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
+        poolclass=None,  # Use default pool
     )
 
     async with connectable.connect() as connection:

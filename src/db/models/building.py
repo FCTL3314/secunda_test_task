@@ -1,15 +1,20 @@
-from sqlalchemy import Column, Integer, String, Float
-from sqlalchemy.orm import relationship
+from typing import TYPE_CHECKING, List
 
-from src.db.models import Base
+from sqlalchemy import Integer, String, Float
+from sqlalchemy.orm import relationship, Mapped, mapped_column
+
+from src.db.models.base import Base
+
+if TYPE_CHECKING:
+    from src.db.models.organization import Organization
 
 
 class Building(Base):
     __tablename__ = "buildings"
 
-    id = Column(Integer, primary_key=True, index=True)
-    address = Column(String)
-    latitude = Column(Float)
-    longitude = Column(Float)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    address: Mapped[str] = mapped_column(String(255))
+    latitude: Mapped[float] = mapped_column(Float)
+    longitude: Mapped[float] = mapped_column(Float)
 
-    organizations = relationship("Organization", back_populates="building")
+    organizations: Mapped[List["Organization"]] = relationship(back_populates="building")

@@ -1,14 +1,19 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship
+from typing import TYPE_CHECKING
 
-from src.db.models import Base
+from sqlalchemy import Integer, String, ForeignKey
+from sqlalchemy.orm import relationship, Mapped, mapped_column
+
+from src.db.models.base import Base
+
+if TYPE_CHECKING:
+    from src.db.models.organization import Organization
 
 
 class PhoneNumber(Base):
     __tablename__ = "phone_numbers"
 
-    id = Column(Integer, primary_key=True, index=True)
-    number = Column(String)
-    organization_id = Column(Integer, ForeignKey("organizations.id"))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    number: Mapped[str] = mapped_column(String(50))
+    organization_id: Mapped[int] = mapped_column(Integer, ForeignKey("organizations.id"))
 
-    organization = relationship("Organization", back_populates="phone_numbers")
+    organization: Mapped["Organization"] = relationship(back_populates="phone_numbers")

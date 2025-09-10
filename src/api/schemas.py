@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel
 
 
@@ -50,3 +52,8 @@ class Organization(OrganizationBase):
 
     class Config:
         from_attributes = True
+
+
+class HealthCheckResponse(BaseModel):
+    status: Literal["ok", "error"]
+    db_connection: bool

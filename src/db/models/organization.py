@@ -1,9 +1,17 @@
+from typing import TYPE_CHECKING, List
+
 from sqlalchemy import Table, Column, Integer, ForeignKey, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
-from src.db.models import Base
+from src.db.models.base import Base
 
-organization_activity_association = Table(
+if TYPE_CHECKING:
+    from src.db.models.building import Building
+    from src.db.models.phone_number import PhoneNumber
+    from src.db.models.activity import Activity
+
+
+organization_activity_association: Table = Table(
     "organization_activity",
     Base.metadata,
     Column("organization_id", Integer, ForeignKey("organizations.id"), primary_key=True),
@@ -14,14 +22,13 @@ organization_activity_association = Table(
 class Organization(Base):
     __tablename__ = "organizations"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    building_id = Column(Integer, ForeignKey("buildings.id"))
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(String(255), index=True)
+    building_id: Mapped[int] = mapped_column(ForeignKey("buildings.id"))
 
-    building = relationship("Building", back_populates="organizations")
-    phone_numbers = relationship("PhoneNumber", back_populates="organization")
-    activities = relationship(
-        "Activity",
+    building: Mapped["Building"] = relationship(back_populates="organizations")
+    phone_numbers: Mapped[List["PhoneNumber"]] = relationship(back_populates="organization")
+    activities: Mapped[List["Activity"]] = relationship(
         secondary=organization_activity_association,
         back_populates="organizations",
     )

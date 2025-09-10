@@ -3,8 +3,8 @@ from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-ENV_FILE = BASE_DIR / ".env"
+BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
+ENV_FILE: Path = BASE_DIR / ".env"
 
 
 class DatabaseSettings(BaseSettings):
@@ -24,9 +24,19 @@ class DatabaseSettings(BaseSettings):
         )
 
 
+class ApiSettings(BaseSettings):
+    static_api_key: str
+
+    model_config = SettingsConfigDict(env_file=ENV_FILE, env_prefix="API_", extra="ignore")
+
+
 class Settings(BaseSettings):
     base_dir: Path = BASE_DIR
 
-    db: DatabaseSettings = DatabaseSettings()  # noqa
+    db: DatabaseSettings = DatabaseSettings()
+    api: ApiSettings = ApiSettings()
 
     model_config = SettingsConfigDict(env_file=ENV_FILE, extra="ignore")
+
+
+settings: Settings = Settings()
